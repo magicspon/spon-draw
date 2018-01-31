@@ -3,8 +3,6 @@ import { animationEnd, eventPromise } from './utils'
 
 /**
  * @class SponDraw
- * @param  {HTMLElement} el : menu button
- * @param  {Object} options : menu options
  */
 export default class SponDraw {
 	defaults = {
@@ -42,7 +40,7 @@ export default class SponDraw {
 	constructor(options = {}) {
 		this.options = { ...this.defaults, ...options }
 
-		this.options.init && this.initialize()
+		this.options.init && this.init()
 
 		Object.assign(this, mitt())
 	}
@@ -271,7 +269,7 @@ export default class SponDraw {
 	 * @function initialize
 	 * @return SponDraw
 	 */
-	initialize = () => {
+	init = () => {
 		if (this.isInitialized) return
 
 		this.isInitialized = true

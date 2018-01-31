@@ -1,6 +1,6 @@
 {
 	"name": "spon-down",
-	"version": "0.1.1",
+	"version": "0.0.1",
 	"main": "dist/index.min.js",
 	"devDependencies": {
 		"babel-core": "^6.26.0",
@@ -19,7 +19,7 @@
 		"dev": "NODE_ENV=development rollup -c -w"
 	},
 	"files": ["dist"],
-	"description": "Throttle resize event and helpers",
+	"description": "Off canvas nav... or something",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/magicspon/spon-down.git"

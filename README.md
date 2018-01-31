@@ -1,87 +1,78 @@
-# Mellow resize events
+# It's off canvas menu, or sidebar... or something...
 
 ## Install
 
-`npm install spon-resize` or `yarn add spon-resize`
+`npm install spon-draw` or `yarn add spon-draw`
 
 Import
 
 ```
-import resizer from 'spon-resize'
+import SponDraw from 'spon-resize'
 ```
 
-Call it...
-
 ```
-const screen = resizer()
-console.log(screen.width, screen.height)
-```
+const mobileMenu = new SponDraw({
 
+  openButton: '[data-menu-opener]',
+
+  overlay: document.getElementById('site-menu'),
+
+  contents: document.getElementById('menu-inner'),
+
+  closeButton: '[data-menu-closer]',
+
+  init: false,
+
+  buttonActiveClass: 'is-active',
+
+  overlayVisibleClass: 'is-visible',
+
+  overlayAnimationClass: 'is-animating',
+
+  transition: true,
+
+  animationType: 'transition',
+
+  before: null
+})
+```
 
 ## **Methods**
 
-
-### **start** 
+### **init**
 
 If you need to use resize events, you will have to call `.start()` first
 
 ```
-screen.start()
+mobileMenu.init()
 ```
 
-
-### **update** 
-
-Returns the current `{ width, height }`
-
-```
-screen.update()
-```
-
-### **at** 
-`screen.at('(min-width: 400px)', { match, unmatch })`
-
-On window resize the *at* method will call either the match function or unmatch function, based on the media query passed in
-
-```
-screen.at(
-  '(min-width: 400px)',
-  match: () => {
-    console.log('query is true')
-  },
-  unmatch: () => {
-    console.log('query is false')
-  }
-)
-```
-
-### **destroy** 
+### **destroy**
 
 Remove event listener
 
 ```
-screen.destroy()
+mobileMenu.destroy()
 ```
 
 ## **Events**
 
-`screen.on('event', { width, height, query })`
-
-
-**'view:resize'** called on window resize
+`mobileMenu.on('event', { dom, event })`
 
 ```
-screen.on('view:resize',  (...args) => {
-	console.log('resize', args)
+mobileMenu.on('open',  ({ dom }) => {
+	console.log('open', dom)
+})
+
+mobileMenu.on('after:open',  ({ dom }) => {
+	console.log('after:open', dom)
+})
+
+mobileMenu.on('close',  ({ dom }) => {
+	console.log('close', dom)
+})
+
+mobileMenu.on('after:close',  ({ dom }) => {
+	console.log('after:close', dom)
 })
 ```
-
-**'view:change'** called when a css breakpoint changed. (read from `body:after { content: " "}`)
-
-
-```
-screen.on('view:change', (...args) => {
-	console.log('change', args)
-})
-```
-
