@@ -41,15 +41,13 @@ const mobileMenu = new SponDraw({
 
 ### **init**
 
-If you need to use resize events, you will have to call `.start()` first
-
 ```
 mobileMenu.init()
 ```
 
 ### **destroy**
 
-Remove event listener
+Remove event listeners, and class names
 
 ```
 mobileMenu.destroy()
