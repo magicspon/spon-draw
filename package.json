@@ -1,5 +1,5 @@
 {
-	"name": "spon-down",
+	"name": "spon-draw",
 	"version": "0.0.1",
 	"main": "dist/index.min.js",
 	"devDependencies": {
@@ -22,14 +22,14 @@
 	"description": "Off canvas nav... or something",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/magicspon/spon-down.git"
+		"url": "git+https://github.com/magicspon/spon-draw.git"
 	},
 	"author": "Dave Stockley",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/magicspon/spon-down/issues"
+		"url": "https://github.com/magicspon/spon-draw/issues"
 	},
-	"homepage": "https://github.com/magicspon/spon-down#readme",
+	"homepage": "https://github.com/magicspon/spon-draw#readme",
 	"dependencies": {
 		"mitt": "^1.1.3"
 	}

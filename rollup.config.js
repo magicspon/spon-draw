@@ -10,7 +10,7 @@ export default [
 		entry: 'src/main.js',
 		dest: pkg.main,
 		format: 'umd',
-		moduleName: 'sponDown',
+		moduleName: 'sponDraw',
 		plugins: [
 			filesize(),
 			babel({
