@@ -7,7 +7,7 @@
 Import
 
 ```
-import SponDraw from 'spon-resize'
+import SponDraw from 'spon-draw'
 ```
 
 ```
