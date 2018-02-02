@@ -26,8 +26,15 @@ export default class SponDraw {
 
 		animationType: 'transition',
 
+		name: 'menu',
+
 		before: null
 	}
+
+	FOCUSABLE_ELEMENTS = [
+		'a[href]',
+		'button:not([disabled]):not([aria-hidden]):not([data-menu-closer])'
+	]
 
 	/**
 	 * The constructor
@@ -91,6 +98,8 @@ export default class SponDraw {
 			contents.addEventListener('click', this.blockClicks)
 		}
 
+		document.addEventListener('keydown', this.onKeyDown)
+
 		return this
 	}
 
@@ -133,6 +142,8 @@ export default class SponDraw {
 
 		this.isAnimating = true
 
+		this.$focus = document.activeElement
+
 		if (!this.isVisible) this.initialFocus = e.target
 
 		this._before({ event: e, state: this.isVisible, dom: this.dom }).then(
@@ -140,6 +151,25 @@ export default class SponDraw {
 				this.isVisible ? this.close() : this.open()
 			}
 		)
+	}
+
+	$focus = null
+
+	onKeyDown = e => {
+		const { keyCode } = e
+
+		if (this.isVisible && keyCode === 27) {
+			this.close()
+		}
+
+		if (
+			!this.isVisible &&
+			keyCode === 32 &&
+			document.activeElement.hasAttribute('data-menu-opener')
+		) {
+			this.$focus = document.activeElement
+			this.open()
+		}
 	}
 
 	/**
@@ -166,13 +196,25 @@ export default class SponDraw {
 			transition
 		} = this.options
 
-		const { overlay, openButton } = this.dom
+		const { overlay, openButton, contents } = this.dom
+
+		const getFocusAbleElement = contents.querySelectorAll(
+			this.FOCUSABLE_ELEMENTS
+		)
+
+		if (getFocusAbleElement.length) {
+			getFocusAbleElement[0].focus()
+		}
 
 		this.emit('open', { dom: this.dom })
 
-		openButton.forEach(button => button.classList.add(buttonActiveClass))
+		openButton.forEach(button => {
+			button.setAttribute('aria-expanded', true)
+			button.classList.add(buttonActiveClass)
+		})
 
 		overlay.classList.add(overlayVisibleClass)
+		overlay.setAttribute('aria-hidden', false)
 
 		if (transition) {
 			overlay.classList.add(overlayAnimationClass)
@@ -199,6 +241,8 @@ export default class SponDraw {
 
 		this.reset()
 
+		this.$focus && this.$focus.focus()
+
 		if (transition) {
 			eventPromise(this.animationEndEvents, overlay).then(this.onTransitionEnd)
 		} else {
@@ -217,10 +261,14 @@ export default class SponDraw {
 		} = this.options
 		const { overlay, openButton } = this.dom
 
-		openButton.forEach(button => button.classList.remove(buttonActiveClass))
+		openButton.forEach(button => {
+			button.setAttribute('aria-expanded', false)
+			button.classList.remove(buttonActiveClass)
+		})
 
-		overlay.classList.remove(overlayAnimationClass)
-		overlay.classList.remove(overlayVisibleClass)
+		overlay.classList.remove(overlayAnimationClass, overlayVisibleClass)
+
+		overlay.setAttribute('aria-hidden', true)
 	}
 
 	/**
@@ -279,7 +327,8 @@ export default class SponDraw {
 			overlay,
 			openButton,
 			closeButton,
-			animationType
+			animationType,
+			name
 		} = this.options
 
 		this.animationEndEvents = animationEnd(animationType)
@@ -291,6 +340,23 @@ export default class SponDraw {
 			closeButton: [...document.querySelectorAll(closeButton)],
 			overlay,
 			contents
+		}
+
+		const btnId = this.dom.openButton[0].getAttribute('id')
+		const overylayId = overlay.getAttribute('id')
+
+		this.dom.openButton.forEach(button => {
+			button.setAttribute('aria-expanded', false)
+			button.setAttribute('aria-label', name)
+			button.setAttribute('aria-controls', overylayId)
+		})
+
+		overlay.setAttribute('aria-hidden', true)
+
+		if (!btnId) {
+			console.warn('sponDraw: menu button should have an id')
+		} else {
+			overlay.setAttribute('aria-labelledby', btnId)
 		}
 
 		this.addEvents()
