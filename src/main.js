@@ -23,17 +23,17 @@ const animationEnd = (type = 'transition') => {
 	let types =
 		type === 'transition'
 			? {
-				OTransition: 'oTransitionEnd',
-				WebkitTransition: 'webkitTransitionEnd',
-				MozTransition: 'transitionend',
-				transition: 'transitionend'
-			}
+					OTransition: 'oTransitionEnd',
+					WebkitTransition: 'webkitTransitionEnd',
+					MozTransition: 'transitionend',
+					transition: 'transitionend'
+				}
 			: {
-				OAnimation: 'oAnimationEnd',
-				WebkitAnimation: 'webkitAnimationEnd',
-				MozAnimation: 'animationend',
-				animation: 'animationend'
-			}
+					OAnimation: 'oAnimationEnd',
+					WebkitAnimation: 'webkitAnimationEnd',
+					MozAnimation: 'animationend',
+					animation: 'animationend'
+				}
 	const elem = document.createElement('fake')
 	return Object.keys(types).reduce(function(prev, trans) {
 		return undefined !== elem.style[trans] ? types[trans] : prev
@@ -43,7 +43,7 @@ const animationEnd = (type = 'transition') => {
 /**
  * @class SponDraw
  */
-class SponDraw {
+export default class SponDraw {
 	defaults = {
 		openButton: '[data-menu-opener]',
 
