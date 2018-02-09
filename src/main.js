@@ -23,17 +23,17 @@ const animationEnd = (type = 'transition') => {
 	let types =
 		type === 'transition'
 			? {
-					OTransition: 'oTransitionEnd',
-					WebkitTransition: 'webkitTransitionEnd',
-					MozTransition: 'transitionend',
-					transition: 'transitionend'
-				}
+				OTransition: 'oTransitionEnd',
+				WebkitTransition: 'webkitTransitionEnd',
+				MozTransition: 'transitionend',
+				transition: 'transitionend'
+			}
 			: {
-					OAnimation: 'oAnimationEnd',
-					WebkitAnimation: 'webkitAnimationEnd',
-					MozAnimation: 'animationend',
-					animation: 'animationend'
-				}
+				OAnimation: 'oAnimationEnd',
+				WebkitAnimation: 'webkitAnimationEnd',
+				MozAnimation: 'animationend',
+				animation: 'animationend'
+			}
 	const elem = document.createElement('fake')
 	return Object.keys(types).reduce(function(prev, trans) {
 		return undefined !== elem.style[trans] ? types[trans] : prev
@@ -43,7 +43,7 @@ const animationEnd = (type = 'transition') => {
 /**
  * @class SponDraw
  */
-export default class SponDraw {
+class SponDraw {
 	defaults = {
 		openButton: '[data-menu-opener]',
 
@@ -135,6 +135,7 @@ export default class SponDraw {
 
 		if (contents) {
 			contents.addEventListener('click', this.blockClicks)
+			contents.addEventListener('touchstart', this.blockClicks)
 		}
 
 		document.addEventListener('keydown', this.onKeyDown)
@@ -163,6 +164,7 @@ export default class SponDraw {
 
 		if (contents) {
 			contents.removeEventListener('click', this.blockClicks)
+			contents.removeEventListener('touchstart', this.blockClicks)
 		}
 		return this
 	}
