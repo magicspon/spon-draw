@@ -218,6 +218,7 @@ export default class SponDraw {
 	 * @return void
 	 */
 	blockClicks = e => {
+		if (e.target.href) return
 		e.stopPropagation()
 	}
 
@@ -237,9 +238,8 @@ export default class SponDraw {
 
 		const { overlay, openButton, contents } = this.dom
 
-		const getFocusAbleElement = contents.querySelectorAll(
-			this.FOCUSABLE_ELEMENTS
-		)
+		const p = contents ? contents : overlay
+		const getFocusAbleElement = p.querySelectorAll(this.FOCUSABLE_ELEMENTS)
 
 		if (getFocusAbleElement.length) {
 			getFocusAbleElement[0].focus()
