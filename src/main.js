@@ -123,15 +123,14 @@ export default class SponDraw {
 	addEvents = () => {
 		const { openButton, closeButton, contents } = this.dom
 
-		openButton.forEach(button => {
-			button.addEventListener('click', this.onClick)
-			button.addEventListener('touchstart', this.onClick)
-		})
+		openButton.addEventListener('click', this.onClick)
+		openButton.addEventListener('touchstart', this.onClick)
 
-		closeButton.forEach(button => {
-			button.addEventListener('click', this.onClick)
-			button.addEventListener('touchstart', this.onClick)
-		})
+		closeButton &&
+			closeButton.forEach(button => {
+				button.addEventListener('click', this.onClick)
+				button.addEventListener('touchstart', this.onClick)
+			})
 
 		if (contents) {
 			contents.addEventListener('click', this.blockClicks)
@@ -152,15 +151,14 @@ export default class SponDraw {
 	removeEvents = () => {
 		const { openButton, closeButton, contents } = this.dom
 
-		openButton.forEach(button => {
-			button.removeEventListener('click', this.onClick)
-			button.removeEventListener('touchstart', this.onClick)
-		})
+		openButton.removeEventListener('click', this.onClick)
+		openButton.removeEventListener('touchstart', this.onClick)
 
-		closeButton.forEach(button => {
-			button.removeEventListener('click', this.onClick)
-			button.removeEventListener('touchstart', this.onClick)
-		})
+		closeButton &&
+			closeButton.forEach(button => {
+				button.removeEventListener('click', this.onClick)
+				button.removeEventListener('touchstart', this.onClick)
+			})
 
 		if (contents) {
 			contents.removeEventListener('click', this.blockClicks)
@@ -206,7 +204,7 @@ export default class SponDraw {
 		if (
 			!this.isVisible &&
 			keyCode === 32 &&
-			document.activeElement.hasAttribute('data-menu-opener')
+			document.activeElement === this.dom.openButton
 		) {
 			this.$focus = document.activeElement
 			this.open()
@@ -249,10 +247,8 @@ export default class SponDraw {
 
 		this.emit('open', { dom: this.dom })
 
-		openButton.forEach(button => {
-			button.setAttribute('aria-expanded', true)
-			button.classList.add(buttonActiveClass)
-		})
+		openButton.setAttribute('aria-expanded', true)
+		openButton.classList.add(buttonActiveClass)
 
 		overlay.classList.add(overlayVisibleClass)
 		overlay.setAttribute('aria-hidden', false)
@@ -302,10 +298,8 @@ export default class SponDraw {
 		} = this.options
 		const { overlay, openButton } = this.dom
 
-		openButton.forEach(button => {
-			button.setAttribute('aria-expanded', false)
-			button.classList.remove(buttonActiveClass)
-		})
+		openButton.setAttribute('aria-expanded', false)
+		openButton.classList.remove(buttonActiveClass)
 
 		overlay.classList.remove(overlayAnimationClass, overlayVisibleClass)
 
@@ -377,25 +371,25 @@ export default class SponDraw {
 		this.dom = {
 			html: document.getElementsByTagName('html')[0],
 			body: document.body,
-			openButton: [...document.querySelectorAll(openButton)],
-			closeButton: [...document.querySelectorAll(closeButton)],
+			openButton: document.querySelector(openButton),
+			closeButton: closeButton && [...document.querySelectorAll(closeButton)],
 			overlay,
 			contents
 		}
 
-		const btnId = this.dom.openButton[0].getAttribute('id')
+		const btnId = this.dom.openButton.getAttribute('id')
 		const overylayId = overlay.getAttribute('id')
 
-		this.dom.openButton.forEach(button => {
-			button.setAttribute('aria-expanded', false)
-			button.setAttribute('aria-label', name)
-			button.setAttribute('aria-controls', overylayId)
-		})
+		this.dom.openButton.setAttribute('aria-expanded', false)
+		this.dom.openButton.setAttribute('aria-label', name)
+		this.dom.openButton.setAttribute('aria-controls', overylayId)
 
 		overlay.setAttribute('aria-hidden', true)
 
 		if (!btnId) {
-			console.warn('sponDraw: menu button should have an id')
+			console.warn(
+				'sponDraw: menu button should have an id for better accessibility'
+			)
 		} else {
 			overlay.setAttribute('aria-labelledby', btnId)
 		}
