@@ -218,7 +218,7 @@ export default class SponDraw {
 	 * @return void
 	 */
 	blockClicks = e => {
-		if (e.target.href) return
+		// debugger // eslint-disable-line
 		e.stopPropagation()
 	}
 
@@ -254,8 +254,11 @@ export default class SponDraw {
 		overlay.setAttribute('aria-hidden', false)
 
 		if (transition) {
-			overlay.classList.add(overlayAnimationClass)
-			eventPromise(this.animationEndEvents, overlay).then(this.onTransitionEnd)
+			eventPromise(this.animationEndEvents, overlay, () => {
+				overlay.classList.add(overlayAnimationClass)
+			}).then(() => {
+				this.onTransitionEnd(true)
+			})
 		} else {
 			this.isVisible = true
 			this.isAnimating = false
@@ -276,15 +279,18 @@ export default class SponDraw {
 
 		this.emit('close', { dom: this.dom })
 
-		this.reset()
-
 		this.$focus && this.$focus.focus()
 
 		if (transition) {
-			eventPromise(this.animationEndEvents, overlay).then(this.onTransitionEnd)
+			eventPromise(this.animationEndEvents, overlay, () => {
+				this.reset()
+			}).then(() => {
+				this.onTransitionEnd(false)
+			})
 		} else {
 			this.isVisible = false
 			this.isAnimating = false
+			this.reset()
 		}
 
 		return this
@@ -312,11 +318,11 @@ export default class SponDraw {
 	 * @function open
 	 * @return void
 	 */
-	onTransitionEnd = () => {
+	onTransitionEnd = visibility => {
 		const { overlay } = this.dom
 		const { overlayAnimationClass } = this.options
 
-		this.isVisible = !this.isVisible
+		this.isVisible = visibility
 		this.isAnimating = false
 		const event = this.isVisible ? 'after:open' : 'after:close'
 
